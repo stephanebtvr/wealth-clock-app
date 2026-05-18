@@ -39,6 +39,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="meeting" options={{ presentation: 'modal' }} />
         <Stack.Screen name="value-scanner" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="receipt-scanner" options={{ presentation: 'modal' }} />
         <Stack.Screen name="negative-time" options={{ presentation: 'modal' }} />
         <Stack.Screen name="snapshot" options={{ presentation: 'modal' }} />
         <Stack.Screen

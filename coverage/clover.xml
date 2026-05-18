@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1779117972094" clover="3.2.0">
-  <project timestamp="1779117972094" name="All files">
-    <metrics statements="217" coveredstatements="217" conditionals="116" coveredconditionals="113" methods="61" coveredmethods="61" elements="394" coveredelements="391" complexity="0" loc="217" ncloc="217" packages="3" files="13" classes="13"/>
+<coverage generated="1779141322979" clover="3.2.0">
+  <project timestamp="1779141322979" name="All files">
+    <metrics statements="237" coveredstatements="237" conditionals="128" coveredconditionals="125" methods="65" coveredmethods="65" elements="430" coveredelements="427" complexity="0" loc="237" ncloc="237" packages="3" files="14" classes="14"/>
     <package name="hooks">
       <metrics statements="86" coveredstatements="86" conditionals="36" coveredconditionals="33" methods="26" coveredmethods="26"/>
       <file name="useEarningsCounter.ts" path="/Users/stphn/Desktop/wealth-clock/src/hooks/useEarningsCounter.ts">
@@ -165,15 +165,15 @@
       </file>
     </package>
     <package name="utils">
-      <metrics statements="79" coveredstatements="79" conditionals="62" coveredconditionals="62" methods="21" coveredmethods="21"/>
+      <metrics statements="99" coveredstatements="99" conditionals="74" coveredconditionals="74" methods="25" coveredmethods="25"/>
       <file name="constants.ts" path="/Users/stphn/Desktop/wealth-clock/src/utils/constants.ts">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="8" type="stmt"/>
-        <line num="2" count="8" type="stmt"/>
-        <line num="3" count="8" type="stmt"/>
-        <line num="4" count="8" type="stmt"/>
-        <line num="5" count="8" type="stmt"/>
-        <line num="6" count="8" type="stmt"/>
+        <line num="1" count="9" type="stmt"/>
+        <line num="2" count="9" type="stmt"/>
+        <line num="3" count="9" type="stmt"/>
+        <line num="4" count="9" type="stmt"/>
+        <line num="5" count="9" type="stmt"/>
+        <line num="6" count="9" type="stmt"/>
       </file>
       <file name="formatCurrency.ts" path="/Users/stphn/Desktop/wealth-clock/src/utils/formatCurrency.ts">
         <metrics statements="10" coveredstatements="10" conditionals="5" coveredconditionals="5" methods="2" coveredmethods="2"/>
@@ -188,12 +188,35 @@
         <line num="19" count="1" type="stmt"/>
         <line num="21" count="1" type="stmt"/>
       </file>
+      <file name="receiptConverter.ts" path="/Users/stphn/Desktop/wealth-clock/src/utils/receiptConverter.ts">
+        <metrics statements="20" coveredstatements="20" conditionals="12" coveredconditionals="12" methods="4" coveredmethods="4"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="26" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="13" type="stmt"/>
+        <line num="41" count="13" type="cond" truecount="2" falsecount="0"/>
+        <line num="42" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="6" type="stmt"/>
+        <line num="45" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="46" count="2" type="stmt"/>
+        <line num="48" count="4" type="stmt"/>
+        <line num="49" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="50" count="2" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="53" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="57" count="26" type="stmt"/>
+        <line num="58" count="29" type="stmt"/>
+        <line num="59" count="29" type="stmt"/>
+        <line num="69" count="29" type="stmt"/>
+        <line num="70" count="26" type="stmt"/>
+        <line num="72" count="26" type="stmt"/>
+      </file>
       <file name="salaryCalculator.ts" path="/Users/stphn/Desktop/wealth-clock/src/utils/salaryCalculator.ts">
         <metrics statements="11" coveredstatements="11" conditionals="1" coveredconditionals="1" methods="5" coveredmethods="5"/>
-        <line num="3" count="6" type="stmt"/>
-        <line num="4" count="6" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
         <line num="7" count="7" type="stmt"/>
-        <line num="11" count="5651" type="stmt"/>
+        <line num="11" count="5714" type="stmt"/>
         <line num="15" count="144" type="stmt"/>
         <line num="19" count="49" type="stmt"/>
         <line num="20" count="49" type="stmt"/>
@@ -236,35 +259,35 @@
       </file>
       <file name="valueConverter.ts" path="/Users/stphn/Desktop/wealth-clock/src/utils/valueConverter.ts">
         <metrics statements="29" coveredstatements="29" conditionals="32" coveredconditionals="32" methods="4" coveredmethods="4"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="8" count="34" type="cond" truecount="2" falsecount="0"/>
-        <line num="9" count="29" type="cond" truecount="2" falsecount="0"/>
-        <line num="10" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="11" count="7" type="stmt"/>
-        <line num="12" count="7" type="stmt"/>
-        <line num="13" count="7" type="cond" truecount="2" falsecount="0"/>
-        <line num="15" count="6" type="stmt"/>
-        <line num="16" count="6" type="stmt"/>
-        <line num="20" count="34" type="cond" truecount="2" falsecount="0"/>
-        <line num="21" count="17" type="cond" truecount="2" falsecount="0"/>
-        <line num="22" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="23" count="4" type="stmt"/>
-        <line num="24" count="4" type="stmt"/>
-        <line num="26" count="9" type="cond" truecount="2" falsecount="0"/>
-        <line num="27" count="6" type="stmt"/>
-        <line num="28" count="6" type="stmt"/>
-        <line num="32" count="34" type="cond" truecount="2" falsecount="0"/>
-        <line num="33" count="29" type="cond" truecount="2" falsecount="0"/>
-        <line num="34" count="17" type="cond" truecount="2" falsecount="0"/>
-        <line num="35" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="36" count="9" type="cond" truecount="2" falsecount="0"/>
-        <line num="37" count="6" type="stmt"/>
-        <line num="41" count="34" type="stmt"/>
-        <line num="42" count="34" type="cond" truecount="2" falsecount="0"/>
-        <line num="43" count="34" type="cond" truecount="4" falsecount="0"/>
-        <line num="44" count="34" type="stmt"/>
-        <line num="45" count="34" type="stmt"/>
-        <line num="47" count="34" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="8" count="89" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="75" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="11" type="stmt"/>
+        <line num="12" count="11" type="stmt"/>
+        <line num="13" count="11" type="cond" truecount="2" falsecount="0"/>
+        <line num="15" count="14" type="stmt"/>
+        <line num="16" count="14" type="stmt"/>
+        <line num="20" count="89" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="6" type="stmt"/>
+        <line num="24" count="6" type="stmt"/>
+        <line num="26" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="14" type="stmt"/>
+        <line num="28" count="14" type="stmt"/>
+        <line num="32" count="89" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="75" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="25" type="cond" truecount="2" falsecount="0"/>
+        <line num="36" count="19" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="14" type="stmt"/>
+        <line num="41" count="89" type="stmt"/>
+        <line num="42" count="89" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="89" type="cond" truecount="4" falsecount="0"/>
+        <line num="44" count="89" type="stmt"/>
+        <line num="45" count="89" type="stmt"/>
+        <line num="47" count="89" type="stmt"/>
       </file>
     </package>
   </project>

@@ -13,20 +13,18 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 CONTEXT SNAPSHOT — 2026-05-18
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ÉTAPE ACTUELLE   : Étape 11 — useMeetingCounter + meeting + MeetingCounter ✅ COMPLÉTÉE
-DERNIÈRE ACTION  : 262/262 tests verts, typecheck+lint clean
-FICHIERS TOUCHÉS : src/hooks/useMeetingCounter.ts, src/components/MeetingCounter.tsx,
-                   app/meeting.tsx, app/_layout.tsx (+ BebasNeue font)
+ÉTAPE ACTUELLE   : Étape 11b — receiptConverter + receipt-scanner + ReceiptLine ✅ COMPLÉTÉE
+DERNIÈRE ACTION  : 296/296 tests verts, typecheck+lint clean
+FICHIERS TOUCHÉS : src/utils/receiptConverter.ts, src/components/ReceiptLine.tsx,
+                   app/receipt-scanner.tsx, app/_layout.tsx (route ajoutée)
 BLOQUANTS ACTIFS : aucun
-DÉCISIONS PRISES : - useMeetingCounter : phase ('running'|'paused'|'stopped') au lieu de isRunning state
-                     pour éviter setState en useEffect (isRunning dérivé : phase === 'running' && !!config)
-                   - configRef.current mis à jour dans useEffect (pas pendant le rendu) → react-hooks/refs rule
-                   - startRef initialisé à 0 (pas Date.now() pendant render) → react-hooks/purity rule
-                   - resume() ajuste startRef pour préserver le temps accumulé avant la pause
-                   - MeetingCounter : setNativeProps (zéro re-render) pour cost + timer
-                   - meeting.tsx : 3 phases (config → active → reveal)
-                   - @expo-google-fonts/bebas-neue installé, 'BebasNeue-Regular' chargé dans _layout.tsx
-PROCHAINE ÉTAPE  : Étape 11b — receiptConverter + receipt-scanner + ReceiptLine
+DÉCISIONS PRISES : - receiptConverter réutilise convertPriceToTime() pour items ET total (zéro duplication)
+                   - ReceiptResultItem : timeLabel (pas label) pour le temps, label = nom de l'article
+                   - shockPhrase : 5 tiers (< 30min / 30-60min / <8h / <5j / ≥5j)
+                   - ReceiptLine : PanResponder swipe-left pour delete (seuil 60px, DELETE_WIDTH 72px)
+                   - Highlight si workMinutes > 480 (1 journée) : bordure rouge + timeLabel en rouge
+                   - receipt-scanner.tsx : presets scrollables + add custom + FlatList + footer sticky
+PROCHAINE ÉTAPE  : Étape 12 — compare + SalaryCompare
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
