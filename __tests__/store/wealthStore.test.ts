@@ -426,3 +426,95 @@ describe('wealthStore — hydrate', () => {
     expect(s().valueHistory).toEqual([])
   })
 })
+
+// ─── removeValueResult ────────────────────────────────────────────────────────
+
+describe('wealthStore — removeValueResult', () => {
+  it('removes the entry with the matching price key', () => {
+    s().addValueResult(makeValueResult(5))
+    s().addValueResult(makeValueResult(10))
+    const id = s().valueHistory[0].price // newest is first
+    s().removeValueResult(id)
+    expect(s().valueHistory).toHaveLength(1)
+    expect(s().valueHistory[0].price).toBe(5)
+  })
+
+  it('is a no-op when id does not exist', () => {
+    s().addValueResult(makeValueResult(5))
+    s().removeValueResult(99)
+    expect(s().valueHistory).toHaveLength(1)
+  })
+
+  it('persists the updated list to AsyncStorage', () => {
+    s().addValueResult(makeValueResult(5))
+    s().addValueResult(makeValueResult(10))
+    jest.clearAllMocks()
+    s().removeValueResult(s().valueHistory[0].price)
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'wealthclock_value_history',
+      expect.any(String),
+    )
+  })
+})
+
+// ─── removeMomentRecord ───────────────────────────────────────────────────────
+
+describe('wealthStore — removeMomentRecord', () => {
+  it('removes the record with the matching id', () => {
+    s().addMomentRecord(makeMomentRecord('a'))
+    s().addMomentRecord(makeMomentRecord('b'))
+    s().removeMomentRecord('b')
+    expect(s().momentHistory).toHaveLength(1)
+    expect(s().momentHistory[0].id).toBe('a')
+  })
+
+  it('is a no-op when id does not exist', () => {
+    s().addMomentRecord(makeMomentRecord('a'))
+    s().removeMomentRecord('z')
+    expect(s().momentHistory).toHaveLength(1)
+  })
+
+  it('persists the updated list to AsyncStorage', () => {
+    s().addMomentRecord(makeMomentRecord('a'))
+    jest.clearAllMocks()
+    s().removeMomentRecord('a')
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'wealthclock_moment_history',
+      expect.any(String),
+    )
+  })
+})
+
+// ─── clearHistory ─────────────────────────────────────────────────────────────
+
+describe('wealthStore — clearHistory', () => {
+  it('empties valueHistory', () => {
+    s().addValueResult(makeValueResult(5))
+    s().clearHistory()
+    expect(s().valueHistory).toEqual([])
+  })
+
+  it('empties momentHistory', () => {
+    s().addMomentRecord(makeMomentRecord('a'))
+    s().clearHistory()
+    expect(s().momentHistory).toEqual([])
+  })
+
+  it('does not affect salary or isPremium', () => {
+    s().setSalary(60_000)
+    s().setIsPremium(true)
+    s().addValueResult(makeValueResult(5))
+    s().clearHistory()
+    expect(s().salary).toBe(60_000)
+    expect(s().isPremium).toBe(true)
+  })
+
+  it('persists empty histories to AsyncStorage', () => {
+    s().addValueResult(makeValueResult(5))
+    s().addMomentRecord(makeMomentRecord('a'))
+    jest.clearAllMocks()
+    s().clearHistory()
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith('wealthclock_value_history', '[]')
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith('wealthclock_moment_history', '[]')
+  })
+})

@@ -42,6 +42,9 @@ interface WealthStore extends WealthState {
   stopNegativeActivity: () => void
   addValueResult: (result: ValueResult) => void
   addMomentRecord: (record: MomentRecord) => void
+  removeValueResult: (price: number) => void
+  removeMomentRecord: (id: string) => void
+  clearHistory: () => void
   resetAll: () => void
   hydrate: () => Promise<void>
 }
@@ -141,6 +144,24 @@ export const useWealthStore = create<WealthStore>((set, get) => ({
     const momentHistory = [record, ...get().momentHistory].slice(0, MAX_MOMENT_HISTORY)
     set({ momentHistory })
     AsyncStorage.setItem(STORAGE_KEYS.MOMENT_HISTORY, JSON.stringify(momentHistory))
+  },
+
+  removeValueResult: (price) => {
+    const valueHistory = get().valueHistory.filter((r) => r.price !== price)
+    set({ valueHistory })
+    AsyncStorage.setItem(STORAGE_KEYS.VALUE_HISTORY, JSON.stringify(valueHistory))
+  },
+
+  removeMomentRecord: (id) => {
+    const momentHistory = get().momentHistory.filter((r) => r.id !== id)
+    set({ momentHistory })
+    AsyncStorage.setItem(STORAGE_KEYS.MOMENT_HISTORY, JSON.stringify(momentHistory))
+  },
+
+  clearHistory: () => {
+    set({ valueHistory: [], momentHistory: [] })
+    AsyncStorage.setItem(STORAGE_KEYS.VALUE_HISTORY, JSON.stringify([]))
+    AsyncStorage.setItem(STORAGE_KEYS.MOMENT_HISTORY, JSON.stringify([]))
   },
 
   resetAll: () => {

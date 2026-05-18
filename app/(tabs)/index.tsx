@@ -81,7 +81,7 @@ export default function HomeScreen() {
       </View>
 
       {/* ─ FAB (absolutely positioned, above tab bar) ─────────────────── */}
-      <ShareButton />
+      <ShareButton onPress={() => router.push('/snapshot')} />
     </SafeAreaView>
   )
 }

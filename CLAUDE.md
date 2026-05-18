@@ -13,20 +13,21 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 CONTEXT SNAPSHOT — 2026-05-19
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ÉTAPE ACTUELLE   : Étape 13 — useNegativeCounter + negative-time + NegativeCounter ✅ COMPLÉTÉE
-DERNIÈRE ACTION  : 327/327 tests verts, typecheck+lint clean
-FICHIERS TOUCHÉS : src/hooks/useNegativeCounter.ts, src/components/NegativeCounter.tsx,
-                   app/negative-time.tsx, __tests__/hooks/useNegativeCounter.test.ts
+ÉTAPE ACTUELLE   : Étape 17 — history + settings + Sentry + EAS Build ✅ COMPLÉTÉE
+DERNIÈRE ACTION  : 391/391 tests verts, coverage 98.7%, typecheck+lint clean
+FICHIERS TOUCHÉS : app/(tabs)/history.tsx, app/settings.tsx, app/_layout.tsx (Sentry),
+                   app.config.ts (créé, plugins Sentry), eas.json (preview Android APK),
+                   src/store/wealthStore.ts (+removeValueResult, +removeMomentRecord, +clearHistory),
+                   __tests__/store/wealthStore.test.ts (TDD pour les 3 nouvelles fonctions)
 BLOQUANTS ACTIFS : aucun
-DÉCISIONS PRISES : - useNegativeCounter : 2 modes — live (tiktok/custom, setInterval) et simulé (durationMinutes, calcul immédiat)
-                   - initialLoss/initialElapsed calculés AVANT useRef pour éviter le reads-during-render sur .current
-                   - Phase enum 'running'|'stopped', isRunning dérivé (pas de setState dans les effects)
-                   - NegativeCounter : interval toujours actif (lit lossRef/elapsedSecondsRef sans condition), defaultValue="−0,00 €"
-                   - negative-time : 3 phases (select → active → reveal), grid 2×4 activités
-                   - TikTok meta message : TextInput + setNativeProps toutes les 100ms
-                   - Fun facts : buildFacts(loss, salary) → 3 facts rotatives 5s cross-fade
-                   - STOP → reveal avec amount, durée, 3 comparaisons
-PROCHAINE ÉTAPE  : Étape 14 — snapshotGenerator + SnapshotCard + snapshot
+DÉCISIONS PRISES : - PanResponder + Animated.Value → useState(() => ...) pas useRef (ERREUR #3)
+                   - SectionList<HistoryItem, HistorySection> union type pour deux types d'items hétérogènes
+                   - Apostrophes typographiques ('…) dans Alert.alert() → utiliser "double quotes"
+                   - Sentry init au module-level dans _layout.tsx, guard SENTRY_DSN absent
+                   - beforeSend supprime salary/annualSalary/secondRate des extras
+                   - eas.json preview → buildType: "apk" pour Android test device
+                   - app.config.ts créé (suppression app.json non nécessaire — les deux coexistent)
+PROCHAINE ÉTAPE  : Étape 18 — Tests finaux + polish + build production
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -42,6 +43,7 @@ PROCHAINE ÉTAPE  : Étape 14 — snapshotGenerator + SnapshotCard + snapshot
 | 2 | `renderHook` RNTL crash "missing peer react-test-renderer" | `react-test-renderer` absent des devDeps | `npm i -D react-test-renderer@19.1.0` (même version que react) |
 | 3 | `react-hooks/refs` lint error sur `useRef(...).current` en render (se répète à chaque composant Animated) | La règle interdit l'accès à `.current` pendant le rendu | **RÈGLE PERMANENTE** : toujours `useState(() => new Animated.Value(x))` pour les valeurs animées, jamais `useRef(new Animated.Value(x)).current` |
 | 4 | `react-hooks/set-state-in-effect` sur setState synchrone dans useEffect | eslint-plugin-react-hooks v7 interdit setState au top-level d'un useEffect | Appeler setState UNIQUEMENT dans les event handlers (AppState, etc.), pas directement dans useEffect |
+| 5 | `expo-view-shot` introuvable sur npm | Le package n'existe pas — c'était un nom fictif dans CLAUDE.md | Utiliser `react-native-view-shot` : `npm install react-native-view-shot` + `import { captureRef } from 'react-native-view-shot'` |
 
 ---
 
