@@ -11,20 +11,22 @@
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 CONTEXT SNAPSHOT — 2026-05-18
+📍 CONTEXT SNAPSHOT — 2026-05-19
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ÉTAPE ACTUELLE   : Étape 11b — receiptConverter + receipt-scanner + ReceiptLine ✅ COMPLÉTÉE
-DERNIÈRE ACTION  : 296/296 tests verts, typecheck+lint clean
-FICHIERS TOUCHÉS : src/utils/receiptConverter.ts, src/components/ReceiptLine.tsx,
-                   app/receipt-scanner.tsx, app/_layout.tsx (route ajoutée)
+ÉTAPE ACTUELLE   : Étape 13 — useNegativeCounter + negative-time + NegativeCounter ✅ COMPLÉTÉE
+DERNIÈRE ACTION  : 327/327 tests verts, typecheck+lint clean
+FICHIERS TOUCHÉS : src/hooks/useNegativeCounter.ts, src/components/NegativeCounter.tsx,
+                   app/negative-time.tsx, __tests__/hooks/useNegativeCounter.test.ts
 BLOQUANTS ACTIFS : aucun
-DÉCISIONS PRISES : - receiptConverter réutilise convertPriceToTime() pour items ET total (zéro duplication)
-                   - ReceiptResultItem : timeLabel (pas label) pour le temps, label = nom de l'article
-                   - shockPhrase : 5 tiers (< 30min / 30-60min / <8h / <5j / ≥5j)
-                   - ReceiptLine : PanResponder swipe-left pour delete (seuil 60px, DELETE_WIDTH 72px)
-                   - Highlight si workMinutes > 480 (1 journée) : bordure rouge + timeLabel en rouge
-                   - receipt-scanner.tsx : presets scrollables + add custom + FlatList + footer sticky
-PROCHAINE ÉTAPE  : Étape 12 — compare + SalaryCompare
+DÉCISIONS PRISES : - useNegativeCounter : 2 modes — live (tiktok/custom, setInterval) et simulé (durationMinutes, calcul immédiat)
+                   - initialLoss/initialElapsed calculés AVANT useRef pour éviter le reads-during-render sur .current
+                   - Phase enum 'running'|'stopped', isRunning dérivé (pas de setState dans les effects)
+                   - NegativeCounter : interval toujours actif (lit lossRef/elapsedSecondsRef sans condition), defaultValue="−0,00 €"
+                   - negative-time : 3 phases (select → active → reveal), grid 2×4 activités
+                   - TikTok meta message : TextInput + setNativeProps toutes les 100ms
+                   - Fun facts : buildFacts(loss, salary) → 3 facts rotatives 5s cross-fade
+                   - STOP → reveal avec amount, durée, 3 comparaisons
+PROCHAINE ÉTAPE  : Étape 14 — snapshotGenerator + SnapshotCard + snapshot
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
