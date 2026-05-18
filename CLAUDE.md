@@ -13,16 +13,20 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 CONTEXT SNAPSHOT — 2026-05-18
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ÉTAPE ACTUELLE   : Étape 10 — value-scanner + ValueResultDisplay ✅ COMPLÉTÉE
-DERNIÈRE ACTION  : 229/229 tests verts, typecheck+lint clean
-FICHIERS TOUCHÉS : app/value-scanner.tsx, src/components/ValueResultDisplay.tsx
+ÉTAPE ACTUELLE   : Étape 11 — useMeetingCounter + meeting + MeetingCounter ✅ COMPLÉTÉE
+DERNIÈRE ACTION  : 262/262 tests verts, typecheck+lint clean
+FICHIERS TOUCHÉS : src/hooks/useMeetingCounter.ts, src/components/MeetingCounter.tsx,
+                   app/meeting.tsx, app/_layout.tsx (+ BebasNeue font)
 BLOQUANTS ACTIFS : aucun
-DÉCISIONS PRISES : - ValueResultDisplay : useState(() => new Animated.Value()) pour les 3 Animated (ref/lint rule)
-                   - Barre de progression : Animated.Value interpolé, capped à 1 journée de travail
-                   - Résultat calculé en temps réel (onChange) + au submit + sur suggestion
-                   - Historique cliquable : re-sélectionne le résultat précédent
-                   - addValueResult appelé à chaque nouveau calcul valide (max 10 dans le store)
-PROCHAINE ÉTAPE  : Étape 11 — useMeetingCounter + meeting screen + MeetingCounter
+DÉCISIONS PRISES : - useMeetingCounter : phase ('running'|'paused'|'stopped') au lieu de isRunning state
+                     pour éviter setState en useEffect (isRunning dérivé : phase === 'running' && !!config)
+                   - configRef.current mis à jour dans useEffect (pas pendant le rendu) → react-hooks/refs rule
+                   - startRef initialisé à 0 (pas Date.now() pendant render) → react-hooks/purity rule
+                   - resume() ajuste startRef pour préserver le temps accumulé avant la pause
+                   - MeetingCounter : setNativeProps (zéro re-render) pour cost + timer
+                   - meeting.tsx : 3 phases (config → active → reveal)
+                   - @expo-google-fonts/bebas-neue installé, 'BebasNeue-Regular' chargé dans _layout.tsx
+PROCHAINE ÉTAPE  : Étape 11b — receiptConverter + receipt-scanner + ReceiptLine
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 

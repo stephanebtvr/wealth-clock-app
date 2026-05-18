@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useFonts } from 'expo-font'
 import { SpaceMono_700Bold } from '@expo-google-fonts/space-mono'
 import { Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit'
+import { BebasNeue_400Regular } from '@expo-google-fonts/bebas-neue'
 import { useWealthStore } from '@/store/wealthStore'
 
 SplashScreen.preventAutoHideAsync()
@@ -16,6 +17,7 @@ export default function RootLayout() {
     'SpaceMono-Bold': SpaceMono_700Bold,
     Outfit: Outfit_400Regular,
     'Outfit-Bold': Outfit_700Bold,
+    'BebasNeue-Regular': BebasNeue_400Regular,
   })
 
   useEffect(() => {
