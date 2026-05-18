@@ -1,7 +1,33 @@
+import { useEffect } from 'react'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import * as SplashScreen from 'expo-splash-screen'
+import { useFonts } from 'expo-font'
+import { SpaceMono_700Bold } from '@expo-google-fonts/space-mono'
+import { Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit'
+import { useWealthStore } from '@/store/wealthStore'
+
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
+  const hydrate = useWealthStore((s) => s.hydrate)
+
+  const [fontsLoaded] = useFonts({
+    'SpaceMono-Bold': SpaceMono_700Bold,
+    Outfit: Outfit_400Regular,
+    'Outfit-Bold': Outfit_700Bold,
+  })
+
+  useEffect(() => {
+    hydrate()
+  }, [hydrate])
+
+  useEffect(() => {
+    if (fontsLoaded) SplashScreen.hideAsync()
+  }, [fontsLoaded])
+
+  if (!fontsLoaded) return null
+
   return (
     <>
       <StatusBar style="light" />

@@ -1,2 +1,6 @@
-// Implemented in Étape 3
-export {}
+export const WORKING_DAYS_PER_YEAR = 218
+export const WORKING_HOURS_PER_DAY = 8
+export const WORKING_HOURS_PER_YEAR = WORKING_DAYS_PER_YEAR * WORKING_HOURS_PER_DAY // 1744
+export const COUNTER_INTERVAL_MS = 100
+export const SMIC_ANNUAL = 21_203
+export const MEDIAN_SALARY_FRANCE = 26_500

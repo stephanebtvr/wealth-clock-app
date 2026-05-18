@@ -13,21 +13,16 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 CONTEXT SNAPSHOT — 2026-05-18
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ÉTAPE ACTUELLE   : Étape 2 — Navigation Expo Router ✅ COMPLÉTÉE
-DERNIÈRE ACTION  : Toute la structure app/ + src/ créée, expo-router v6 installé,
-                   routing onboarding/tabs/modals configuré, types complets dans src/types/index.ts
-FICHIERS TOUCHÉS : app/_layout.tsx, app/index.tsx, app/(onboarding)/*, app/(tabs)/*,
-                   app/meeting|value-scanner|negative-time|snapshot|paywall|settings.tsx,
-                   src/types/index.ts, src/config/revenuecat.ts, tous les placeholders src/,
-                   app.json (scheme, dark mode, typedRoutes), package.json (main: expo-router/entry)
+ÉTAPE ACTUELLE   : Étape 10 — value-scanner + ValueResultDisplay ✅ COMPLÉTÉE
+DERNIÈRE ACTION  : 229/229 tests verts, typecheck+lint clean
+FICHIERS TOUCHÉS : app/value-scanner.tsx, src/components/ValueResultDisplay.tsx
 BLOQUANTS ACTIFS : aucun
-DÉCISIONS PRISES : - expo-router v6 (compatible SDK 54, géré par expo install)
-                   - app/index.tsx = redirect (check AsyncStorage wealthclock_onboarding_done)
-                   - Paywall = transparentModal (bottom sheet)
-                   - Tous les utils/hooks/components = placeholders vides (export {})
-                   - App.tsx + index.ts conservés mais inutilisés (expo-router/entry est le main)
-                   - Projet mergé : wealth-clock/ EST le repo git (plus de wealthclock/ imbriqué)
-PROCHAINE ÉTAPE  : Étape 3 — Logique pure + Tests 100% — écrire les tests EN PREMIER (TDD)
+DÉCISIONS PRISES : - ValueResultDisplay : useState(() => new Animated.Value()) pour les 3 Animated (ref/lint rule)
+                   - Barre de progression : Animated.Value interpolé, capped à 1 journée de travail
+                   - Résultat calculé en temps réel (onChange) + au submit + sur suggestion
+                   - Historique cliquable : re-sélectionne le résultat précédent
+                   - addValueResult appelé à chaque nouveau calcul valide (max 10 dans le store)
+PROCHAINE ÉTAPE  : Étape 11 — useMeetingCounter + meeting screen + MeetingCounter
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -39,7 +34,10 @@ PROCHAINE ÉTAPE  : Étape 3 — Logique pure + Tests 100% — écrire les tests
 
 | # | Erreur | Cause | Fix appliqué |
 |---|--------|-------|--------------|
-| — | *(aucune encore)* | — | — |
+| 1 | jest 30 incompatible avec jest-expo 55 | jest ^30 dans devDeps, jest-expo attend jest 29 | Pinné `jest: "^29.0.0"` + `@types/jest: "^29.0.0"` dans devDeps |
+| 2 | `renderHook` RNTL crash "missing peer react-test-renderer" | `react-test-renderer` absent des devDeps | `npm i -D react-test-renderer@19.1.0` (même version que react) |
+| 3 | `react-hooks/refs` lint error sur `useRef(...).current` en render (se répète à chaque composant Animated) | La règle interdit l'accès à `.current` pendant le rendu | **RÈGLE PERMANENTE** : toujours `useState(() => new Animated.Value(x))` pour les valeurs animées, jamais `useRef(new Animated.Value(x)).current` |
+| 4 | `react-hooks/set-state-in-effect` sur setState synchrone dans useEffect | eslint-plugin-react-hooks v7 interdit setState au top-level d'un useEffect | Appeler setState UNIQUEMENT dans les event handlers (AppState, etc.), pas directement dans useEffect |
 
 ---
 

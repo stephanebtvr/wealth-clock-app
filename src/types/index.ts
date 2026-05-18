@@ -24,6 +24,7 @@ export interface ValueResult {
   workDays: number
   label: string
   comparison: string
+  emoji: string
 }
 
 // ─── History records ──────────────────────────────────────────────────────────
@@ -37,12 +38,39 @@ export interface MomentRecord {
   createdAt: number
 }
 
+// ─── Negative activity ───────────────────────────────────────────────────────
+
+export type NegativeActivityType =
+  | 'netflix_episode'
+  | 'netflix_movie'
+  | 'tiktok_scroll'
+  | 'commute'
+  | 'gym'
+  | 'cooking'
+  | 'shopping'
+  | 'custom'
+
+export interface ActiveMeeting {
+  startedAt: number
+  participants: number
+}
+
+export interface ActiveNegativeActivity {
+  type: NegativeActivityType
+  startedAt: number
+  durationMinutes?: number
+}
+
 // ─── Store ────────────────────────────────────────────────────────────────────
 
 export interface WealthState {
+  salary: number | null
   secondRate: number
   calcMode: CalcMode
   isPremium: boolean
+  isOnboardingCompleted: boolean
+  activeMeeting: ActiveMeeting | null
+  activeNegativeActivity: ActiveNegativeActivity | null
   valueHistory: ValueResult[]
   momentHistory: MomentRecord[]
 }
