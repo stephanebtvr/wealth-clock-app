@@ -31,10 +31,16 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
+.env.local
 .env*.local
 
 # typescript
 *.tsbuildinfo
+
+# Secrets & native signing
+google-services.json
+GoogleService-Info.plist
 
 # generated native folders
 /ios
