@@ -13,17 +13,21 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 CONTEXT SNAPSHOT — 2026-05-18
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ÉTAPE ACTUELLE   : Étape 1 — Setup projet ✅ COMPLÉTÉE
-DERNIÈRE ACTION  : Setup complet : Expo SDK 54, TypeScript strict, ESLint 10 flat config,
-                   Prettier, Jest, .gitignore, .env.example, eas.json, scripts package.json
-FICHIERS TOUCHÉS : wealthclock/tsconfig.json, package.json, eslint.config.js,
-                   .prettierrc, .gitignore, .env.example, eas.json
+ÉTAPE ACTUELLE   : Étape 2 — Navigation Expo Router ✅ COMPLÉTÉE
+DERNIÈRE ACTION  : Toute la structure app/ + src/ créée, expo-router v6 installé,
+                   routing onboarding/tabs/modals configuré, types complets dans src/types/index.ts
+FICHIERS TOUCHÉS : app/_layout.tsx, app/index.tsx, app/(onboarding)/*, app/(tabs)/*,
+                   app/meeting|value-scanner|negative-time|snapshot|paywall|settings.tsx,
+                   src/types/index.ts, src/config/revenuecat.ts, tous les placeholders src/,
+                   app.json (scheme, dark mode, typedRoutes), package.json (main: expo-router/entry)
 BLOQUANTS ACTIFS : aucun
-DÉCISIONS PRISES : - App dans sous-dossier wealthclock/ (à l'intérieur de wealth-clock/)
-                   - ESLint 10 flat config (eslint.config.js) — pas .eslintrc
-                   - npx via `npm exec --yes --package=create-expo-app` (workaround npm 10)
-                   - jest-expo preset + coverageThreshold 80% global
-PROCHAINE ÉTAPE  : Étape 2 — Navigation Expo Router — créer toute la structure app/
+DÉCISIONS PRISES : - expo-router v6 (compatible SDK 54, géré par expo install)
+                   - app/index.tsx = redirect (check AsyncStorage wealthclock_onboarding_done)
+                   - Paywall = transparentModal (bottom sheet)
+                   - Tous les utils/hooks/components = placeholders vides (export {})
+                   - App.tsx + index.ts conservés mais inutilisés (expo-router/entry est le main)
+                   - Projet mergé : wealth-clock/ EST le repo git (plus de wealthclock/ imbriqué)
+PROCHAINE ÉTAPE  : Étape 3 — Logique pure + Tests 100% — écrire les tests EN PREMIER (TDD)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
