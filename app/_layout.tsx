@@ -11,6 +11,7 @@ import Purchases from 'react-native-purchases'
 import * as Sentry from '@sentry/react-native'
 import { useWealthStore } from '@/store/wealthStore'
 import { usePurchases } from '@/hooks/usePurchases'
+import { useSecureStorage } from '@/hooks/useSecureStorage'
 import { REVENUECAT_IOS_KEY, REVENUECAT_ANDROID_KEY } from '@/config/revenuecat'
 
 SplashScreen.preventAutoHideAsync()
@@ -47,7 +48,9 @@ if (rcKey) {
 
 export default function RootLayout() {
   const hydrate = useWealthStore((s) => s.hydrate)
+  const setSalary = useWealthStore((s) => s.setSalary)
   const { checkPremiumStatus } = usePurchases()
+  const { loadSalary } = useSecureStorage()
 
   const [fontsLoaded] = useFonts({
     'SpaceMono-Bold': SpaceMono_700Bold,
@@ -57,8 +60,13 @@ export default function RootLayout() {
   })
 
   useEffect(() => {
-    hydrate()
-  }, [hydrate])
+    const init = async () => {
+      await hydrate()
+      const salary = await loadSalary()
+      if (salary !== null) setSalary(salary)
+    }
+    init()
+  }, [hydrate, loadSalary, setSalary])
 
   useEffect(() => {
     checkPremiumStatus()

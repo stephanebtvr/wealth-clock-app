@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
   Linking,
-  Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -38,15 +40,17 @@ function Row({
   value,
   onPress,
   danger,
+  noBorder,
 }: {
   label: string
   value?: string
   onPress?: () => void
   danger?: boolean
+  noBorder?: boolean
 }) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+      style={({ pressed }) => [styles.row, noBorder && styles.rowNoBorder, pressed && styles.rowPressed]}
       onPress={onPress}
       disabled={!onPress}
     >
@@ -71,14 +75,23 @@ export default function SettingsScreen() {
   const { restorePurchases } = usePurchases()
 
   const [editingSalary, setEditingSalary] = useState(false)
-  const [salaryInput, setSalaryInput] = useState(salary?.toString() ?? '')
+  const [salaryInput, setSalaryInput] = useState('')
   const [salaryError, setSalaryError] = useState<string | null>(null)
+  const inputRef = useRef<TextInput>(null)
 
-  // Salary edit
+  // ─── Salary edit (inline — no nested Modal) ───────────────────────────────
+
   const openSalaryEdit = () => {
     setSalaryInput(salary?.toString() ?? '')
     setSalaryError(null)
     setEditingSalary(true)
+    // Focus après le prochain rendu
+    setTimeout(() => inputRef.current?.focus(), 50)
+  }
+
+  const cancelSalaryEdit = () => {
+    Keyboard.dismiss()
+    setEditingSalary(false)
   }
 
   const confirmSalaryEdit = async () => {
@@ -87,13 +100,15 @@ export default function SettingsScreen() {
       setSalaryError(result.error)
       return
     }
+    Keyboard.dismiss()
     setSalary(result.value)
     await saveSalary(result.value)
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
     setEditingSalary(false)
   }
 
-  // Calc mode
+  // ─── Calc mode ────────────────────────────────────────────────────────────
+
   const toggleCalcMode = () => {
     const next: CalcMode = calcMode === 'work_only' ? 'annualized' : 'work_only'
     Haptics.selectionAsync()
@@ -102,12 +117,13 @@ export default function SettingsScreen() {
 
   const calcModeLabel = calcMode === 'work_only' ? 'Jours ouvrés (défaut)' : 'Annualisé 24/7'
 
-  // Clear history
+  // ─── Clear history ────────────────────────────────────────────────────────
+
   const handleClearHistory = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     Alert.alert(
-      "Vider l’historique",
-      "Supprimer toutes les valeurs et tous les moments calculés ? Cette action est irréversible.",
+      "Vider l'historique",
+      "Supprimer toutes les valeurs et tous les moments calculés ? Cette action est irréversible.",
       [
         { text: 'Annuler', style: 'cancel' },
         {
@@ -122,102 +138,115 @@ export default function SettingsScreen() {
     )
   }
 
-  // Restore purchases
+  // ─── Restore ──────────────────────────────────────────────────────────────
+
   const handleRestore = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     await restorePurchases()
   }
 
+  // ─── Render ───────────────────────────────────────────────────────────────
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Pressable onPress={() => router.back()} hitSlop={12}>
-          <Text style={styles.back}>← Retour</Text>
-        </Pressable>
-        <Text style={styles.title}>Paramètres</Text>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Salary */}
-        <Section title="Mon salaire">
-          <Row
-            label="Salaire annuel brut"
-            value={salary ? `${salary.toLocaleString('fr-FR')} €` : 'Non défini'}
-            onPress={openSalaryEdit}
-          />
-          <Row
-            label="Mode de calcul"
-            value={calcModeLabel}
-            onPress={toggleCalcMode}
-          />
-        </Section>
-
-        {/* Premium */}
-        <Section title="Premium">
-          {isPremium ? (
-            <Row label="Statut" value="✓ Premium actif" />
-          ) : (
-            <Row label="Déverrouiller Premium" onPress={() => router.push('/paywall')} />
-          )}
-          <Row label="Restaurer mes achats" onPress={handleRestore} />
-        </Section>
-
-        {/* Data */}
-        <Section title="Données">
-          <Row label="Vider l'historique" onPress={handleClearHistory} danger />
-        </Section>
-
-        {/* Legal + version */}
-        <Section title="Infos">
-          <Row
-            label="Conditions d'utilisation"
-            onPress={() => Linking.openURL('https://wealthclock.app/cgu')}
-          />
-          <Row
-            label="Politique de confidentialité"
-            onPress={() => Linking.openURL('https://wealthclock.app/privacy')}
-          />
-          <Row label="Version" value={APP_VERSION} />
-        </Section>
-      </ScrollView>
-
-      {/* Salary edit modal */}
-      <Modal
-        visible={editingSalary}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setEditingSalary(false)}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.modalOverlay}>
-          <Pressable style={styles.modalBackdrop} onPress={() => setEditingSalary(false)} />
-          <View style={styles.modalSheet}>
-            <Text style={styles.modalTitle}>Modifier le salaire</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={salaryInput}
-              onChangeText={(v) => {
-                setSalaryInput(v)
-                setSalaryError(null)
-              }}
-              keyboardType="numeric"
-              placeholder="Ex : 45000"
-              placeholderTextColor="#44445A"
-              autoFocus
-            />
-            {salaryError ? <Text style={styles.modalError}>{salaryError}</Text> : null}
-            <Pressable style={styles.modalCta} onPress={confirmSalaryEdit}>
-              <Text style={styles.modalCtaText}>Confirmer</Text>
-            </Pressable>
-            <Pressable
-              style={styles.modalCancel}
-              onPress={() => setEditingSalary(false)}
-            >
-              <Text style={styles.modalCancelText}>Annuler</Text>
-            </Pressable>
-          </View>
+        {/* Header */}
+        <View style={styles.header}>
+          <Pressable onPress={() => router.back()} hitSlop={12}>
+            <Text style={styles.back}>← Retour</Text>
+          </Pressable>
+          <Text style={styles.title}>Paramètres</Text>
         </View>
-      </Modal>
+
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Salary */}
+          <Section title="Mon salaire">
+            {editingSalary ? (
+              /* ── Inline edit card ── */
+              <View style={styles.editCard}>
+                <Text style={styles.editLabel}>Salaire annuel brut</Text>
+                <View style={styles.editInputRow}>
+                  <TextInput
+                    ref={inputRef}
+                    style={styles.editInput}
+                    value={salaryInput}
+                    onChangeText={(v) => {
+                      setSalaryInput(v)
+                      setSalaryError(null)
+                    }}
+                    keyboardType="numeric"
+                    placeholder="Ex : 45 000"
+                    placeholderTextColor="#44445A"
+                    returnKeyType="done"
+                    onSubmitEditing={confirmSalaryEdit}
+                  />
+                  <Text style={styles.editSuffix}>€ / an</Text>
+                </View>
+                {salaryError ? (
+                  <Text style={styles.editError}>{salaryError}</Text>
+                ) : (
+                  <Text style={styles.editHint}>Entre 1 000 € et 10 000 000 €</Text>
+                )}
+                <View style={styles.editActions}>
+                  <Pressable style={styles.editCancel} onPress={cancelSalaryEdit}>
+                    <Text style={styles.editCancelText}>Annuler</Text>
+                  </Pressable>
+                  <Pressable style={styles.editConfirm} onPress={confirmSalaryEdit}>
+                    <Text style={styles.editConfirmText}>Confirmer</Text>
+                  </Pressable>
+                </View>
+              </View>
+            ) : (
+              <Row
+                label="Salaire annuel brut"
+                value={salary ? `${salary.toLocaleString('fr-FR')} €` : 'Non défini'}
+                onPress={openSalaryEdit}
+              />
+            )}
+            <Row
+              label="Mode de calcul"
+              value={calcModeLabel}
+              onPress={toggleCalcMode}
+              noBorder
+            />
+          </Section>
+
+          {/* Premium */}
+          <Section title="Premium">
+            {isPremium ? (
+              <Row label="Statut" value="✓ Premium actif" />
+            ) : (
+              <Row label="Déverrouiller Premium" onPress={() => router.push('/paywall')} />
+            )}
+            <Row label="Restaurer mes achats" onPress={handleRestore} noBorder />
+          </Section>
+
+          {/* Data */}
+          <Section title="Données">
+            <Row label="Vider l'historique" onPress={handleClearHistory} danger noBorder />
+          </Section>
+
+          {/* Legal + version */}
+          <Section title="Infos">
+            <Row
+              label="Conditions d'utilisation"
+              onPress={() => Linking.openURL('https://wealthclock.app/cgu')}
+            />
+            <Row
+              label="Politique de confidentialité"
+              onPress={() => Linking.openURL('https://wealthclock.app/privacy')}
+            />
+            <Row label="Version" value={APP_VERSION} noBorder />
+          </Section>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -226,6 +255,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#0A0A0F' },
+  flex: { flex: 1 },
 
   header: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 4, gap: 4 },
   back: { fontFamily: 'Outfit', fontSize: 14, color: '#8888AA', marginBottom: 4 },
@@ -266,64 +296,84 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#1E1E2E',
   },
+  rowNoBorder: { borderBottomWidth: 0 },
   rowPressed: { backgroundColor: '#1C1C28' },
   rowLabel: { fontFamily: 'Outfit', fontSize: 15, color: '#FFFFFF' },
   rowLabelDanger: { color: '#FF4444' },
   rowValue: { fontFamily: 'Outfit', fontSize: 14, color: '#8888AA' },
 
-  // Modal
-  modalOverlay: { flex: 1, justifyContent: 'flex-end' },
-  modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.6)' },
-  modalSheet: {
-    backgroundColor: '#13131A',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 24,
-    gap: 12,
-    borderWidth: 1,
-    borderColor: '#1E1E2E',
-    borderBottomWidth: 0,
+  // Inline salary editor
+  editCard: {
+    padding: 16,
+    gap: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1E1E2E',
   },
-  modalTitle: {
+  editLabel: {
     fontFamily: 'Outfit-Bold',
-    fontSize: 20,
-    color: '#FFFFFF',
-    marginBottom: 4,
+    fontSize: 13,
+    color: '#8888AA',
   },
-  modalInput: {
+  editInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#0A0A0F',
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#1E1E2E',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    borderWidth: 1.5,
+    borderColor: '#00FF87',
+    paddingHorizontal: 14,
+  },
+  editInput: {
+    flex: 1,
     fontFamily: 'SpaceMono-Bold',
-    fontSize: 20,
+    fontSize: 22,
     color: '#FFFFFF',
+    paddingVertical: 14,
     fontVariant: ['tabular-nums'],
   },
-  modalError: {
-    fontFamily: 'Outfit',
-    fontSize: 13,
-    color: '#FF4444',
-    paddingLeft: 4,
-  },
-  modalCta: {
-    backgroundColor: '#00FF87',
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  modalCtaText: {
-    fontFamily: 'Outfit-Bold',
-    fontSize: 16,
-    color: '#0A0A0F',
-  },
-  modalCancel: { alignItems: 'center', paddingVertical: 10 },
-  modalCancelText: {
+  editSuffix: {
     fontFamily: 'Outfit',
     fontSize: 14,
     color: '#8888AA',
+    marginLeft: 6,
+  },
+  editHint: {
+    fontFamily: 'Outfit',
+    fontSize: 12,
+    color: '#44445A',
+  },
+  editError: {
+    fontFamily: 'Outfit',
+    fontSize: 12,
+    color: '#FF4444',
+  },
+  editActions: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 2,
+  },
+  editCancel: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: '#1C1C28',
+    alignItems: 'center',
+  },
+  editCancelText: {
+    fontFamily: 'Outfit',
+    fontSize: 15,
+    color: '#8888AA',
+  },
+  editConfirm: {
+    flex: 2,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: '#00FF87',
+    alignItems: 'center',
+  },
+  editConfirmText: {
+    fontFamily: 'Outfit-Bold',
+    fontSize: 15,
+    color: '#0A0A0F',
   },
 })
